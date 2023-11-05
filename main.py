@@ -28,7 +28,7 @@ async def main(page: ft.Page):
                 ft.Column(
                     [
                         ft.Text(user_name, weight="bold"),
-                        ft.Text(message, selectable=True)
+                        ft.Text(message, selectable=True, width=500)
                     ],
                     tight=True,
                     spacing=5,
@@ -46,6 +46,7 @@ async def main(page: ft.Page):
             messages[index - 1] = generate_chat_message_ui(text, 'AI')
             columns.controls = update_column_items()
             await columns.update_async()
+            print(text)
         await page.update_async()
  
     def update_column_items():

@@ -29,7 +29,6 @@ class AiChat:
             if not output:
                 continue
             await asyncio.sleep(0)
-            print(output)
             yield output
 
 
