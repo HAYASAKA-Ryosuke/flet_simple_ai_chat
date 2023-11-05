@@ -6,12 +6,19 @@ async def main(page: ft.Page):
     ai_chat = AiChat()
     page.title = "SIMPLE CHAT UI"
     page.vertical_alignment = ft.MainAxisAlignment.END
-
-    input_text_field = ft.TextField(value="", width=300, multiline=True)
     messages = []
 
+    async def send_message(e):
+        messages.append(generate_chat_message_ui(input_text_field.value))
+        messages.append(generate_chat_message_ui('waiting ...', 'AI'))
+        message = input_text_field.value
+        input_text_field.value = ''
+        await send_message_to_ai(message, len(messages))
+
+    input_text_field = ft.TextField(value="", hint_text="Write a message...", multiline=True, expand=True)
+
     def generate_chat_message_ui(message: str, user_name="YOU"):
-        row = ft.Row(
+        return ft.Row(
             [
                 ft.CircleAvatar(
                     content=ft.Text(user_name),
@@ -21,7 +28,7 @@ async def main(page: ft.Page):
                 ft.Column(
                     [
                         ft.Text(user_name, weight="bold"),
-                        ft.Text(message, selectable=True),
+                        ft.Text(message, selectable=True)
                     ],
                     tight=True,
                     spacing=5,
@@ -29,7 +36,6 @@ async def main(page: ft.Page):
             ],
             vertical_alignment=ft.MainAxisAlignment.CENTER
         )
-        return row
 
     async def send_message_to_ai(message: str, index: int):
         text = ''
@@ -41,14 +47,7 @@ async def main(page: ft.Page):
             columns.controls = update_column_items()
             await columns.update_async()
         await page.update_async()
-
-    async def send_message(e):
-        messages.append(generate_chat_message_ui(input_text_field.value))
-        messages.append(generate_chat_message_ui('waiting ...', 'AI'))
-        message = input_text_field.value
-        input_text_field.value = ''
-        await send_message_to_ai(message, len(messages))
-    
+ 
     def update_column_items():
         items = []
 
@@ -59,7 +58,11 @@ async def main(page: ft.Page):
             ft.Row(
                 [
                     input_text_field,
-                    ft.IconButton(ft.icons.SEND, on_click=send_message),
+                    ft.IconButton(
+                      icon=ft.icons.SEND_ROUNDED,
+                      tooltip="Send message",
+                      on_click=send_message,
+                    ),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             )
