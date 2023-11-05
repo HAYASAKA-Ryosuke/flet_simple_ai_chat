@@ -2,11 +2,6 @@ import flet as ft
 from ai_chat import AiChat
 
 
-class ChatMessage(ft.Row):
-    def __init__(self, message: str, user_name="USER"):
-        super().__init__()
-
-
 async def main(page: ft.Page):
     ai_chat = AiChat()
     page.title = "SIMPLE CHAT UI"
